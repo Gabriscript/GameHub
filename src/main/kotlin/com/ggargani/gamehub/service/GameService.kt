@@ -1,29 +1,37 @@
 package com.ggargani.gamehub.service
 
 import com.ggargani.gamehub.dto.GameDto
+import com.ggargani.gamehub.repository.GameRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.http.HttpStatus
-
 @Service
-class GameService {
+class GameService(
+    private val gameRepository: GameRepository
+) {
 
-    private val games = listOf(
-        GameDto(1, "Space Invaders", "Classic arcade shooter", "Arcade"),
-        GameDto(2, "Tic Tac Toe", "Simple strategy game", "Puzzle")
-    )
-
-    fun getAllGames(): List<GameDto> {
-        return games
-    }
-
-    fun getGameById(id: Long): GameDto {
-        return games.find { it.id == id }
-            ?: throw ResponseStatusException(
-                HttpStatus.NOT_FOUND,
-                "Game with id $id not found"
+    fun getAllGames(): List<GameDto> =
+        gameRepository.findAll().map {
+            GameDto(
+                id = it.id,
+                title = it.title,
+                description = it.description,
+                genre = it.genre
             )
-    }
+        }
+
+    fun getGameById(id: Long): GameDto =
+        gameRepository.findById(id)
+            .map {
+                GameDto(it.id, it.title, it.description, it.genre)
+            }
+            .orElseThrow {
+                ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Game with id $id not found"
+                )
+            }
 }
+
 
 
