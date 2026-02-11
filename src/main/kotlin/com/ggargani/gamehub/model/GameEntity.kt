@@ -18,5 +18,8 @@ class GameEntity(
 
     val description: String,
 
-    val genre: String
+    val genre: String,
+
+    val buildPath: String
 )
+
