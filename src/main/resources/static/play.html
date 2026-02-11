@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <title>Play Game</title>
+</head>
+<body>
+<div id="gameContainer"></div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+
+    fetch("/games/" + id)
+        .then(res => res.json())
+        .then(game => {
+            const container = document.getElementById("gameContainer");
+
+            container.innerHTML = `
+                <h2>${game.title}</h2>
+                <iframe
+                    src="${game.buildPath}"
+                    width="960"
+                    height="600"
+                    frame border="0">
+                </iframe>
+            `;
+        });
+</script>
+</body>
+</html>
